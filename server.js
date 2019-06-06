@@ -24,7 +24,23 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
-
+app.get("/api/timestamp/*", (req,res) => {
+  if(moment(req.params[0]).isValid()){
+    
+    res.json({"unix":moment(req.params[0],['X','YYYY-MM-DD'],true).unix(),
+              "utc" : moment(req.params[0],['x','YYYY-MM-DD'],true).format('LLLL')         
+             })
+    
+  }
+  else if(req.params[0] === ""){
+    res.json({"unix":new Date().getTime(),
+              "utc" : moment().format("LLLL")            
+             })
+  }
+  else{
+    res.json({"error": "invalid date"})
+  }
+});
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
